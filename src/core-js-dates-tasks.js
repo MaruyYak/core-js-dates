@@ -211,8 +211,17 @@ function getCountWeekendsInMonth(month, year) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  throw new Error('Not implemented');
+function getWeekNumberByDate(date) {
+  const newDate = new Date(date);
+  newDate.setDate(newDate.getDate() - ((newDate.getDay() + 6) % 7));
+  const year = newDate.getFullYear();
+  const firstDayOfYear = new Date(year, 0, 1);
+  firstDayOfYear.setDate(
+    firstDayOfYear.getDate() - ((firstDayOfYear.getDay() + 6) % 7)
+  );
+  const diffMilsec = newDate - firstDayOfYear;
+  const weekNumber = Math.ceil((diffMilsec / (1000 * 60 * 60 * 24) + 1) / 7);
+  return weekNumber;
 }
 
 /**
@@ -226,8 +235,17 @@ function getWeekNumberByDate(/* date */) {
  * Date(2024, 0, 13) => Date(2024, 8, 13)
  * Date(2023, 1, 1) => Date(2023, 9, 13)
  */
-function getNextFridayThe13th(/* date */) {
-  throw new Error('Not implemented');
+function getNextFridayThe13th(date) {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+
+  const nexFriday = new Date(year, month, 13);
+
+  while (nexFriday.getDay() !== 5) {
+    nexFriday.setMonth(nexFriday.getMonth() + 1);
+  }
+
+  return nexFriday;
 }
 
 /**
@@ -241,8 +259,19 @@ function getNextFridayThe13th(/* date */) {
  * Date(2024, 5, 1) => 2
  * Date(2024, 10, 10) => 4
  */
-function getQuarter(/* date */) {
-  throw new Error('Not implemented');
+function getQuarter(date) {
+  const month = date.getMonth();
+
+  if (month >= 0 && month <= 2) {
+    return 1;
+  }
+  if (month >= 3 && month <= 5) {
+    return 2;
+  }
+  if (month >= 6 && month <= 8) {
+    return 3;
+  }
+  return 4;
 }
 
 /**
@@ -279,8 +308,9 @@ function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
  * Date(2022, 2, 1) => false
  * Date(2020, 2, 1) => true
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const year = date.getFullYear();
+  return year % 400 === 0 || (year % 4 === 0 && year % 100 !== 0);
 }
 
 module.exports = {
